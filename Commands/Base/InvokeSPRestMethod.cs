@@ -1,4 +1,5 @@
-﻿using Microsoft.SharePoint.Client;
+﻿#if !NETSTANDARD2_1
+using Microsoft.SharePoint.Client;
 using Newtonsoft.Json;
 using OfficeDevPnP.Core.Utilities;
 using SharePointPnP.PowerShell.CmdletHelpAttributes;
@@ -43,23 +44,22 @@ PS:> Invoke-PnPSPRestMethod -Method Post -Url ""/_api/web/lists/GetByTitle('Test
        Code = @"PS:> $item = ""{ '__metadata': { 'type': 'SP.Data.TestListItem' }, 'Title': 'Test'}""
 PS:> Invoke-PnPSPRestMethod -Method Post -Url ""/_api/web/lists/GetByTitle('Test')/items"" -Content $item -ContentType ""application/json;odata=verbose""",
        Remarks = @"This example creates a new item in the list 'Test' and sets the title field to 'Test'", SortOrder = 5)]
-    public class InvokeSPRestMethod : PnPCmdlet
+    public class InvokeSPRestMethod : PnPSharePointCmdlet
     {
         [Parameter(Mandatory = false, Position = 0, HelpMessage = "The Http method to execute. Defaults to GET.")]
         public HttpRequestMethod Method = HttpRequestMethod.Get;
 
-        [Parameter(Mandatory = true, Position = 0, HelpMessage = "The url to execute.")]
+        [Parameter(Mandatory = true, Position = 0, HelpMessage = "The url to execute")]
         public string Url;
 
         [Parameter(Mandatory = false, HelpMessage = "A string or object to send")]
         public object Content;
 
-        [Parameter(Mandatory = false, HelpMessage = "The content type of the object to send. Defaults to 'application/json'")]
+        [Parameter(Mandatory = false, HelpMessage = "The content type of the object to send. Defaults to 'application/json'.")]
         public string ContentType = "application/json";
 
         protected override void ExecuteCmdlet()
         {
-
             if (Url.StartsWith("/"))
             {
                 // prefix the url with the current web url
@@ -69,15 +69,13 @@ PS:> Invoke-PnPSPRestMethod -Method Post -Url ""/_api/web/lists/GetByTitle('Test
             var accessToken = this.ClientContext.GetAccessToken();
             var method = new HttpMethod(Method.ToString());
 
-            //var method = new HttpMethod(Method.ToString().ToUpper());
-            using (var handler = new System.Net.Http.HttpClientHandler())
+            using (var handler = new HttpClientHandler())
             {
                 // we're not in app-only or user + app context, so let's fall back to cookie based auth
-                if (String.IsNullOrEmpty(accessToken))
+                if (string.IsNullOrEmpty(accessToken))
                 {
                     SetAuthenticationCookies(handler, ClientContext);
                 }
-
 
                 using (var httpClient = new PnPHttpProvider(handler))
                 {
@@ -93,9 +91,14 @@ PS:> Invoke-PnPSPRestMethod -Method Post -Url ""/_api/web/lists/GetByTitle('Test
                         request.Headers.Add("X-HTTP-Method", "MERGE");
                     }
 
+                    if (Method == HttpRequestMethod.Merge || Method == HttpRequestMethod.Delete)
+                    {
+                        request.Headers.Add("IF-MATCH", "*");
+                    }
+
                     if (!string.IsNullOrEmpty(accessToken))
                     {
-                        request.Headers.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", accessToken);
+                        request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
                     }
                     else
                     {
@@ -104,7 +107,7 @@ PS:> Invoke-PnPSPRestMethod -Method Post -Url ""/_api/web/lists/GetByTitle('Test
                             handler.Credentials = networkCredential;
                         }
                     }
-                    request.Headers.Add("X-RequestDigest", (ClientContext as ClientContext).GetRequestDigest().GetAwaiter().GetResult());
+                    request.Headers.Add("X-RequestDigest", ClientContext.GetRequestDigest().GetAwaiter().GetResult());
 
                     if (Method == HttpRequestMethod.Post)
                     {
@@ -139,7 +142,6 @@ PS:> Invoke-PnPSPRestMethod -Method Post -Url ""/_api/web/lists/GetByTitle('Test
                     }
                 }
             }
-
         }
 
         private void SetAuthenticationCookies(HttpClientHandler handler, ClientContext context)
@@ -174,7 +176,6 @@ PS:> Invoke-PnPSPRestMethod -Method Post -Url ""/_api/web/lists/GetByTitle('Test
         }
     }
 
-
     //Taken from "Remote Authentication in SharePoint Online Using the Client Object Model"
     //https://code.msdn.microsoft.com/Remote-Authentication-in-b7b6f43c
 
@@ -201,7 +202,6 @@ PS:> Invoke-PnPSPRestMethod -Method Post -Url ""/_api/web/lists/GetByTitle('Test
         /// <returns>Returns Cookie contents as a string</returns>
         public static string GetCookie(string url)
         {
-
             int size = 512;
             StringBuilder sb = new StringBuilder(size);
             if (!NativeMethods.InternetGetCookieEx(url, null, sb, ref size, INTERNET_COOKIE_HTTPONLY, IntPtr.Zero))
@@ -221,7 +221,6 @@ PS:> Invoke-PnPSPRestMethod -Method Post -Url ""/_api/web/lists/GetByTitle('Test
 
         private static class NativeMethods
         {
-
             [DllImport("wininet.dll", EntryPoint = "InternetGetCookieEx", CharSet = CharSet.Unicode, SetLastError = true)]
             public static extern bool InternetGetCookieEx(
                 string url,
@@ -233,3 +232,4 @@ PS:> Invoke-PnPSPRestMethod -Method Post -Url ""/_api/web/lists/GetByTitle('Test
         }
     }
 }
+#endif

@@ -453,8 +453,8 @@
     <Reference Include="Microsoft.Graph.Core, Version=1.9.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.Graph.Core.1.9.0\lib\net45\Microsoft.Graph.Core.dll</HintPath>
     </Reference>
-    <Reference Include="Microsoft.Identity.Client, Version=4.10.0.0, Culture=neutral, PublicKeyToken=0a613f4dd989e8ae, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.Identity.Client.4.10.0\lib\net45\Microsoft.Identity.Client.dll</HintPath>
+    <Reference Include="Microsoft.Identity.Client, Version=4.16.1.0, Culture=neutral, PublicKeyToken=0a613f4dd989e8ae, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Identity.Client.4.16.1\lib\net45\Microsoft.Identity.Client.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.IdentityModel, Version=3.5.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.IdentityModel.6.1.7600.16394\lib\net35\Microsoft.IdentityModel.dll</HintPath>
@@ -554,12 +554,13 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Admin\AddHubSiteAssociation.cs" />
-    <Compile Include="Admin\AddOffice365GroupToSite.cs" />
+    <Compile Include="Admin\AddMicrosoft365GroupToSite.cs" />
     <Compile Include="Admin\AddOrgAssetsLibrary.cs" />
     <Compile Include="Admin\AddSiteCollectionAppCatalog.cs" />
     <Compile Include="Admin\AddTenantTheme.cs" />
     <Compile Include="Admin\ClearTenantAppCatalogUrl.cs" />
     <Compile Include="Admin\GetKnowledgeHubSite.cs" />
+    <Compile Include="Admin\GetTenantSyncClientRestriction.cs" />
     <Compile Include="Admin\RemoveKnowledgeHubSite.cs" />
     <Compile Include="Admin\SetKnowledgeHubSite.cs" />
     <Compile Include="Admin\RevokeHubSiteRights.cs" />
@@ -569,6 +570,7 @@
     <Compile Include="Admin\GetHubSiteChild.cs" />
     <Compile Include="Admin\GetTenantId.cs" />
     <Compile Include="Admin\RegisterAppCatalogSite.cs" />
+    <Compile Include="Admin\SetTenantSyncClientRestriction.cs" />
     <Compile Include="Base\BasePSCmdlet.cs" />
     <Compile Include="Apps\AddApplicationCustomizer.cs" />
     <Compile Include="Apps\GetApplicationCustomizer.cs" />
@@ -578,6 +580,7 @@
     <Compile Include="Admin\GetOrgNewsSite.cs" />
     <Compile Include="Admin\RemoveOrgNewsSite.cs" />
     <Compile Include="Admin\AddOrgNewsSite.cs" />
+    <Compile Include="Base\GetAccessToken.cs" />
     <Compile Include="Base\InitializePowerShellAuthentication.cs" />
     <Compile Include="Base\InvokeSPRestMethod.cs" />
     <Compile Include="Admin\RemoveHomeSite.cs" />
@@ -619,19 +622,35 @@
     <Compile Include="Base\GetException.cs" />
     <Compile Include="Base\GetPowerShellTelemetryEnabled.cs" />
     <Compile Include="Base\EnablePowerShellTelemetry.cs" />
-    <Compile Include="Base\GetAccessToken.cs" />
+    <Compile Include="Base\PipeBinds\FileVersionPipeBind.cs" />
+    <Compile Include="Base\PipeBinds\TeamsAppPipeBind.cs" />
+    <Compile Include="Base\PipeBinds\TeamsChannelPipeBind.cs" />
+    <Compile Include="Base\PipeBinds\TeamsTabPipeBind.cs" />
+    <Compile Include="Base\PipeBinds\TeamsTeamPipeBind.cs" />
+    <Compile Include="Base\PnPConnectedCmdlet.cs" />
+    <Compile Include="Enums\Office365Workload.cs" />
+    <Compile Include="Files\RestoreFileVersion.cs" />
+    <Compile Include="Files\RemoveFileVersion.cs" />
+    <Compile Include="Files\GetFileVersion.cs" />
+    <Compile Include="Graph\ClearMicrosoft365GroupMember.cs" />
+    <Compile Include="Graph\ClearMicrosoft365GroupOwner.cs" />
+    <Compile Include="Graph\RemoveMicrosoft365GroupOwner.cs" />
+    <Compile Include="Graph\RemoveMicrosoft365GroupMember.cs" />
+    <Compile Include="Graph\AddMicrosoft365GroupMember.cs" />
+    <Compile Include="Graph\GetGraphAccessToken.cs" />
     <Compile Include="Base\GetAzureCertificate.cs" />
     <Compile Include="Base\NewAzureCertificate.cs" />
     <Compile Include="Base\PipeBinds\AlertPipeBind.cs" />
     <Compile Include="Base\PipeBinds\ApplyConfigurationPipeBind.cs" />
     <Compile Include="Base\PipeBinds\ExtractConfigurationPipeBind.cs" />
-    <Compile Include="Base\PipeBinds\TeamPipeBind.cs" />
     <Compile Include="Base\PipeBinds\PagePipeBind.cs" />
     <Compile Include="Base\PipeBinds\ProvisioningTemplatePipeBind.cs" />
     <Compile Include="Base\PipeBinds\ProvisioningHierarchyPipeBind.cs" />
     <Compile Include="Base\PipeBinds\ProvisioningSitePipeBind.cs" />
     <Compile Include="Base\PipeBinds\ProvisioningSequencePipebind.cs" />
     <Compile Include="Base\PipeBinds\TenantSiteDesignTaskPipeBind.cs" />
+    <Compile Include="Base\PipeBinds\GraphSubscriptionPipeBind.cs" />
+    <Compile Include="Base\PnPOfficeManagementApiCmdlet.cs" />
     <Compile Include="Base\RemoveStoredCredential.cs" />
     <Compile Include="Base\PipeBinds\ClientSideWebPartPipeBind.cs" />
     <Compile Include="Base\PipeBinds\HubSitePipeBind.cs" />
@@ -644,27 +663,51 @@
     <Compile Include="Base\PipeBinds\TenantSiteDesignPipeBind.cs" />
     <Compile Include="Base\RequestAccessToken.cs" />
     <Compile Include="Base\TokenHandling.cs" />
+    <Compile Include="Branding\GetFooter.cs" />
+    <Compile Include="Branding\SetFooter.cs" />
     <Compile Include="ClientSidePages\ClientSidePageTransformatorLogType.cs" />
     <Compile Include="ClientSidePages\ExportClientSidePageMapping.cs" />
     <Compile Include="ClientSidePages\SaveClientSidePageConversionLog.cs" />
     <Compile Include="Enums\AlertFilter.cs" />
     <Compile Include="Enums\AuditContentType.cs" />
+    <Compile Include="Enums\GrooveBlockOption.cs" />
     <Compile Include="Enums\HttpRequestMethod.cs" />
     <Compile Include="Enums\InitializationType.cs" />
     <Compile Include="Enums\ListItemUpdateType.cs" />
     <Compile Include="Enums\SearchBoxInNavBar.cs" />
     <Compile Include="Enums\StorageEntityScope.cs" />
+    <Compile Include="Enums\TokenAudience.cs" />
     <Compile Include="Files\ResetFileVersion.cs" />
-    <Compile Include="Graph\GetDeletedUnifiedGroup.cs" />
-    <Compile Include="Graph\RemoveDeletedUnifiedGroup.cs" />
-    <Compile Include="Graph\RestoreDeletedUnifiedGroup.cs" />
+    <Compile Include="Graph\GetGraphSubscription.cs" />
+    <Compile Include="Graph\GetDeletedMicrosoft365Group.cs" />
+    <Compile Include="Graph\NewGraphSubscription.cs" />
+    <Compile Include="Graph\ResetMicrosoft365GroupExpiration.cs" />
+    <Compile Include="Graph\GetAADUser.cs" />
+    <Compile Include="Graph\RemoveDeletedMicrosoft365Group.cs" />
+    <Compile Include="Graph\SetGraphSubscription.cs" />
+    <Compile Include="Graph\RemoveGraphSubscription.cs" />
+    <Compile Include="Graph\RestoreDeletedMicrosoft365Group.cs" />
     <Compile Include="InformationManagement\GetLabel.cs" />
     <Compile Include="InformationManagement\ResetLabel.cs" />
     <Compile Include="InformationManagement\SetLabel.cs" />
     <Compile Include="Lists\ClearDefaultColumnValues.cs" />
+    <Compile Include="ManagementApi\GetOffice365HistoricalServiceStatus.cs" />
+    <Compile Include="ManagementApi\GetOffice365ServiceMessage.cs" />
+    <Compile Include="ManagementApi\GetOffice365Services.cs" />
+    <Compile Include="ManagementApi\GetOfficeManagementApiAccessToken.cs" />
     <Compile Include="ManagementApi\GetManagementApiAccessToken.cs" />
+    <Compile Include="ManagementApi\GetOffice365CurrentServiceStatus.cs" />
     <Compile Include="ManagementApi\GetUnifiedAuditLog.cs" />
     <Compile Include="Model\AzureApp.cs" />
+    <Compile Include="Model\ManagementApiFeatureStatus.cs" />
+    <Compile Include="Model\ManagementApiFeature.cs" />
+    <Compile Include="Model\ManagementApiService.cs" />
+    <Compile Include="Model\ManagementApiServiceMessageText.cs" />
+    <Compile Include="Model\ManagementApiServiceMessage.cs" />
+    <Compile Include="Model\ManagementApiServiceStatus.cs" />
+    <Compile Include="Model\SharePointToken.cs" />
+    <Compile Include="Model\OfficeManagementApiToken.cs" />
+    <Compile Include="Model\GraphToken.cs" />
     <Compile Include="Model\ManagementApiSubscription.cs" />
     <Compile Include="Model\ManagementApiSubscriptionContent.cs" />
     <Compile Include="Model\ManagementApiUnifiedLogRecordKeyValuePair.cs" />
@@ -674,6 +717,28 @@
     <Compile Include="Model\ProvisionedSite.cs" />
     <Compile Include="Model\ServicePrincipalPermissionGrant.cs" />
     <Compile Include="ClientSidePages\ConvertToClientSidePage.cs" />
+    <Compile Include="Model\SPOTenantSyncClientRestriction.cs" />
+    <Compile Include="Model\Teams\GraphException.cs" />
+    <Compile Include="Model\Teams\Group.cs" />
+    <Compile Include="Model\Teams\Team.cs" />
+    <Compile Include="Model\Teams\TeamApp.cs" />
+    <Compile Include="Model\Teams\TeamAppInstance.cs" />
+    <Compile Include="Model\Teams\TeamChannel.cs" />
+    <Compile Include="Model\Teams\TeamChannelMessage.cs" />
+    <Compile Include="Model\Teams\TeamChannelType.cs" />
+    <Compile Include="Model\Teams\TeamDiscoverySettings.cs" />
+    <Compile Include="Model\Teams\TeamFunSettings.cs" />
+    <Compile Include="Model\Teams\TeamGuestSettings.cs" />
+    <Compile Include="Model\Teams\TeamMemberSettings.cs" />
+    <Compile Include="Model\Teams\TeamMessagingSettings.cs" />
+    <Compile Include="Model\Teams\TeamSecurity.cs" />
+    <Compile Include="Model\Teams\TeamSecurityUser.cs" />
+    <Compile Include="Model\Teams\TeamSettings.cs" />
+    <Compile Include="Model\Teams\TeamTab.cs" />
+    <Compile Include="Model\Teams\TeamTabConfiguration.cs" />
+    <Compile Include="Model\Teams\TeamTabResource.cs" />
+    <Compile Include="Model\Teams\TeamTabType.cs" />
+    <Compile Include="Model\Teams\User.cs" />
     <Compile Include="Navigation\GetNavigationNode.cs" />
     <Compile Include="Branding\SetWebTheme.cs" />
     <Compile Include="ClientSidePages\GetClientSideComponent.cs" />
@@ -686,12 +751,11 @@
     <Compile Include="InformationManagement\SetListInformationRightsManagement.cs" />
     <Compile Include="InformationManagement\GetListInformationRightsManagement.cs" />
     <Compile Include="Model\ConnectionMethod.cs" />
-    <Compile Include="Model\GraphObject.cs" />
     <Compile Include="Model\ResponseCollection.cs" />
     <Compile Include="Model\SPOPublicCdnOrigin.cs" />
     <Compile Include="Model\SPOTenant.cs" />
     <Compile Include="Model\SPOTheme.cs" />
-    <Compile Include="Model\TokenResult.cs" />
+    <Compile Include="Model\GenericToken.cs" />
     <Compile Include="ClientSidePages\ExportClientSidePage.cs" />
     <Compile Include="Principals\RemoveAlert.cs" />
     <Compile Include="Principals\GetAlert.cs" />
@@ -770,7 +834,7 @@
     <Compile Include="Base\PipeBinds\ImageRenditionPipeBind.cs" />
     <Compile Include="Base\PnPRetrievalsCmdlet.cs" />
     <Compile Include="Base\PnPWebRetrievalsCmdlet.cs" />
-    <Compile Include="Base\PnPCmdlet.cs" />
+    <Compile Include="Base\PnPSharePointCmdlet.cs" />
     <Compile Include="Base\PnPAdminCmdlet.cs" />
     <Compile Include="ContentTypes\GetContentTypePublishingHubUrl.cs" />
     <Compile Include="Diagnostic\MeasurePnPList.cs" />
@@ -788,19 +852,19 @@
     <Compile Include="Files\RenameFile.cs" />
     <Compile Include="Base\PipeBinds\RecycleBinItemPipeBind.cs" />
     <Compile Include="Files\RenameFolder.cs" />
-    <Compile Include="Graph\GetUnifiedGroupOwners.cs" />
-    <Compile Include="Graph\GetUnifiedGroupMembers.cs" />
+    <Compile Include="Graph\GetMicrosoft365GroupOwners.cs" />
+    <Compile Include="Graph\GetMicrosoft365GroupMembers.cs" />
     <Compile Include="Graph\UpdateSiteClassification.cs" />
     <Compile Include="Graph\RemoveSiteClassification.cs" />
     <Compile Include="Graph\DisableSiteClassification.cs" />
     <Compile Include="Graph\AddSiteClassification.cs" />
     <Compile Include="Graph\GetSiteClassification.cs" />
     <Compile Include="Graph\EnableSiteClassification.cs" />
-    <Compile Include="Graph\GetUnifiedGroup.cs" />
+    <Compile Include="Graph\GetMicrosoft365Group.cs" />
     <Compile Include="Admin\GetWebTemplates.cs" />
     <Compile Include="Admin\GetTimeZoneId.cs" />
-    <Compile Include="Graph\NewUnifiedGroup.cs" />
-    <Compile Include="Graph\RemoveUnifiedGroup.cs" />
+    <Compile Include="Graph\NewMicrosoft365Group.cs" />
+    <Compile Include="Graph\RemoveMicrosoft365Group.cs" />
     <Compile Include="Admin\SetTenantSite.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -813,7 +877,7 @@
     <Compile Include="Base\PipeBinds\ListItemPipeBind.cs" />
     <Compile Include="Base\PipeBinds\FolderPipeBind.cs" />
     <Compile Include="Base\PipeBinds\TermGroupPipeBind.cs" />
-    <Compile Include="Base\PipeBinds\UnifiedGroupPipeBind.cs" />
+    <Compile Include="Base\PipeBinds\Microsoft365GroupPipeBind.cs" />
     <Compile Include="Base\PipeBinds\WorkflowInstancePipeBind.cs" />
     <Compile Include="Base\PipeBinds\WorkflowDefinitionPipeBind.cs" />
     <Compile Include="Base\PipeBinds\WorkflowSubscriptionPipeBind.cs" />
@@ -821,7 +885,7 @@
     <Compile Include="Base\GetStoredCredential.cs" />
     <Compile Include="Base\GetHealthScore.cs" />
     <Compile Include="Base\InvokeQuery.cs" />
-    <Compile Include="Base\DisconnectSPOnline.cs" />
+    <Compile Include="Base\DisconnectOnline.cs" />
     <Compile Include="Base\PipeBinds\FieldPipeBind.cs" />
     <Compile Include="Base\PipeBinds\ListPipeBind.cs" />
     <Compile Include="Base\PipeBinds\AppPipeBind.cs" />
@@ -834,15 +898,14 @@
     <Compile Include="Base\PnPAzureADConnection.cs" />
     <Compile Include="Base\PnPGraphCmdlet.cs" />
     <Compile Include="Base\SetContext.cs" />
-    <Compile Include="Base\SPOnlineConnection.cs" />
-    <Compile Include="Base\SPOnlineConnectionHelper.cs" />
+    <Compile Include="Base\PnPConnection.cs" />
+    <Compile Include="Base\PnPConnectionHelper.cs" />
     <Compile Include="Base\ConnectOnline.cs" />
     <Compile Include="Admin\GetTenantSite.cs" />
     <Compile Include="Base\SetTraceLog.cs" />
-    <Compile Include="Enums\TargetPlatform.cs" />
     <Compile Include="Enums\TargetScope.cs" />
     <Compile Include="Files\GetFolder.cs" />
-    <Compile Include="Graph\SetUnifiedGroup.cs" />
+    <Compile Include="Graph\SetMicrosoft365Group.cs" />
     <Compile Include="Principals\GetGroupMembers.cs" />
     <Compile Include="RecordsManagement\DisableInPlaceRecordsManagementForSite.cs" />
     <Compile Include="RecordsManagement\EnableInPlaceRecordsManagementForSite.cs" />
@@ -859,12 +922,41 @@
     <Compile Include="ClientSidePages\AddClientSideText.cs" />
     <Compile Include="Site\AddRoleDefinition.cs" />
     <Compile Include="Site\AddTeamsTeam.cs" />
+    <Compile Include="Site\GetSharingForNonOwnersOfSite.cs" />
     <Compile Include="Site\EnableCommSite.cs" />
     <Compile Include="Site\GetRoleDefinition.cs" />
+    <Compile Include="Site\GetIsSiteAliasAvailable.cs" />
     <Compile Include="Site\RemoveRoleDefinition.cs" />
+    <Compile Include="Site\DisableSharingForNonOwnersOfSite.cs" />
     <Compile Include="Site\TestOffice365GroupAliasIsUsed.cs" />
     <Compile Include="Taxonomy\NewTermLabel.cs" />
+    <Compile Include="Teams\AddTeamsChannel.cs" />
+    <Compile Include="Teams\AddTeamsTab.cs" />
+    <Compile Include="Teams\AddTeamsUser.cs" />
+    <Compile Include="Teams\GetTeamsApp.cs" />
+    <Compile Include="Teams\GetTeamsChannel.cs" />
+    <Compile Include="Teams\GetTeamsChannelMessage.cs" />
+    <Compile Include="Teams\GetTeamsTab.cs" />
+    <Compile Include="Teams\GetTeamsTeam.cs" />
+    <Compile Include="Teams\GetTeamsUser.cs" />
+    <Compile Include="Teams\NewTeamsApp.cs" />
+    <Compile Include="Teams\NewTeamsTeam.cs" />
+    <Compile Include="Teams\RemoveTeamsApp.cs" />
+    <Compile Include="Teams\RemoveTeamsChannel.cs" />
+    <Compile Include="Teams\RemoveTeamsTab.cs" />
+    <Compile Include="Teams\RemoveTeamsTeam.cs" />
+    <Compile Include="Teams\RemoveTeamsUser.cs" />
+    <Compile Include="Teams\SetTeamsChannel .cs" />
+    <Compile Include="Teams\SetTeamsTab.cs" />
+    <Compile Include="Teams\SetTeamsTeam.cs" />
+    <Compile Include="Teams\SetTeamsTeamArchivedState.cs" />
+    <Compile Include="Teams\SetTeamsTeamPicture.cs" />
+    <Compile Include="Teams\SubmitTeamsChannelMessage.cs" />
+    <Compile Include="Teams\UpdateTeamsApp.cs" />
     <Compile Include="UserProfiles\GetUPABulkImportStatus.cs" />
+    <Compile Include="UserProfiles\SetUserOneDriveQuota.cs" />
+    <Compile Include="UserProfiles\ResetUserOneDriveQuotaToDefault.cs" />
+    <Compile Include="UserProfiles\GetUserOneDriveQuota.cs" />
     <Compile Include="UserProfiles\NewUPABulkImportJob.cs" />
     <Compile Include="Utilities\AzureAuthHelper.cs" />
     <Compile Include="Utilities\BrowserHelper.cs" />
@@ -876,12 +968,15 @@
     <Compile Include="Utilities\JwtUtility.cs" />
     <Compile Include="Utilities\OperatingSystem.cs" />
     <Compile Include="Utilities\ProvisioningHelper.cs" />
+    <Compile Include="Utilities\REST\GraphCollection.cs" />
+    <Compile Include="Utilities\REST\GraphHelper.cs" />
     <Compile Include="Utilities\REST\MetadataType.cs" />
     <Compile Include="Utilities\REST\RestHelper.cs" />
     <Compile Include="Utilities\REST\RestRequest.cs" />
     <Compile Include="Utilities\Shell.cs" />
     <Compile Include="Utilities\StringExtensions.cs" />
     <Compile Include="SiteDesigns\SetSiteScript.cs" />
+    <Compile Include="Utilities\TeamsUtility.cs" />
     <Compile Include="Utilities\UrlUtilities.cs" />
     <Compile Include="WebParts\AddClientSideWebPart.cs" />
     <Compile Include="ClientSidePages\GetAvailableClientSideComponents.cs" />
@@ -906,7 +1001,6 @@
     <Compile Include="Provisioning\Site\AddFileToProvisioningTemplate.cs" />
     <Compile Include="Provisioning\Site\ReadProvisioningTemplate.cs" />
     <Compile Include="Provisioning\Site\NewProvisioningTemplate.cs" />
-    <Compile Include="Components\ProvisioningTemplateInformation.cs" />
     <Compile Include="Provisioning\Site\RemoveFileFromProvisioningTemplate.cs" />
     <Compile Include="Provisioning\Site\SaveProvisioningTemplate.cs" />
     <Compile Include="Provisioning\Site\SetProvisioningTemplateMetadata.cs" />
@@ -1033,6 +1127,7 @@
     <Compile Include="Files\GetFolderItem.cs" />
     <Compile Include="Web\GetRequestAccessEmails.cs" />
     <Compile Include="Principals\GetUser.cs" />
+    <Compile Include="Web\GetAvailableLanguage.cs" />
     <Compile Include="Web\InvokeWebAction.cs" />
     <Compile Include="Files\ResolveFolder.cs" />
     <Compile Include="Files\AddFolder.cs" />
@@ -1181,7 +1276,7 @@
     </PreBuildEvent>
   </PropertyGroup>
   <Target Name="BeforeBuild">
-    <Exec Command="del $(ProjectDir)\obj\SharePointPnP.PowerShell.Core.*" />
+    <Exec Command="del $(ProjectDir)\obj\PnP.PowerShell.Core.*" />
     <Exec Command="del $(ProjectDir)\obj\*.json" />
   </Target>
   <Target Name="AfterBuild">

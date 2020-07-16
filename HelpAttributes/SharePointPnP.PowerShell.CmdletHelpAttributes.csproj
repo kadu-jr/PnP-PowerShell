@@ -103,12 +103,16 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CmdletApiPermissionBase.cs" />
+    <Compile Include="CmdletMicrosoftGraphApiPermission.cs" />
+    <Compile Include="CmdletOfficeManagementApiPermission.cs" />
     <Compile Include="CmdletPipeLineAttribute.cs" />
     <Compile Include="CmdletAdditionalParameterAttribute.cs" />
     <Compile Include="CmdletExampleAttribute.cs" />
     <Compile Include="CmdletHelpCategory.cs" />
     <Compile Include="CmdletRelatedLinkAttribute.cs" />
     <Compile Include="CmdletSupportedPlatform.cs" />
+    <Compile Include="CmdletTokenTypeAttribute.cs" />
     <Compile Include="PnPParameterAttribute.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="CmdletHelpAttribute.cs" />

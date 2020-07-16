@@ -5,6 +5,98 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/).
 
+## [3.24.2008.0]
+
+## [3.23.2007.0]
+
+### Added
+- Added `-WithRightsAssignedDetailed` parameter to `Get-PnPUser` when used against SharePoint Online allowing for fine grained (broken) permissions on item, list and site level to be shown [PR #2754](https://github.com/pnp/PnP-PowerShell/pull/2754)
+- Added a `-RowLimit` parameter to `Clear-PnPRecycleBinItem` and `Restore-PnPRecycleBinItem` so that it can be used on recycle bins which hold more than 5000 items [PR #2760](https://github.com/pnp/PnP-PowerShell/pull/2760)
+- Added connection option to `Connect-PnPOnline` taking `-Scopes` and `-Credentials` to allow setting up a delegated permission token for use with Microsoft Graph and the Office 365 Management API. See [this wiki page](https://github.com/pnp/PnP-PowerShell/wiki/Connect-options#connect-using-scopes-and-credentials) for more details. [PR #2746](https://github.com/pnp/PnP-PowerShell/pull/2746)
+- Added support for enabling and disabling fields using `Set-PnPField -Identity FieldName -Values @{AllowDeletion=$false}` [PR #2766](https://github.com/pnp/PnP-PowerShell/pull/2766)
+- Added the following cmdlets to add/remove/clear owners and members of Microsoft 365 Groups: `Add-PnPMicrosoft365GroupMember`, `Add-PnPMicrosoft365GroupOwner`, `Remove-PnPMicrosoft365GroupMember`, `Remove-PnPMicrosoft365GroupOwner`, `Clear-PnPMicrosoft365GroupMember`, `Clear-PnPMicrosoft365GroupOwner` [PR #2750](https://github.com/pnp/PnP-PowerShell/pull/2750)
+- Added Add-PnPTeamsChannel, Add-PnPTeamsTab, Add-PnPTeamsUser, Get-PnPTeamsApp, Get-PnPTeamsChannel, Get-PnPTeamsChannelMessage, Get-PnPTeamsTab, Get-PnPTeamsTeam, Get-PnPTeamsUser, New-PnPTeamsApp, New-PnPTeamsTeam, Remove-PnPTeamsChannel, Remove-PnPTeamsTab, Remove-PnPTeamsTeam, Remove-PnPTeamsUser, Set-PnPTeamsChannel, Set-PnPTeamsTab, Set-PnPTeamsTeam, Set-PnPTeamsPicture, Submit-PnPTeamsChannelMessage, Update-PnPTeamsApp cmdlets
+- Added Get-PnPFileVersion, Remove-PnPFileVersion, Restore-PnPFileVersion cmdlets
+- Added `-HideFromAddressLists` and `-HideFromOutlookClients` to `Set-PnPUnifiedGroup` to allow for setting the visibility of Microsoft 365 Groups [PR #2717](https://github.com/pnp/PnP-PowerShell/pull/2717)
+
+### Changed
+- Updated implementation of `Move-PnPFile` to now also support moving of files and folders accross site collections [PR #2749](https://github.com/pnp/PnP-PowerShell/pull/2749)
+- Fixed issue where using `Disconnect-PnPOnline -Connection $variable` after having connected using `$variable = Connect-PnPOnline -CertificatePath <path> -ReturnConnection`, it would not clean up the certificate on that connection instance passed in by $variable, but instead try to do it on the current connection context [PR #2755](https://github.com/pnp/PnP-PowerShell/pull/2755)
+- Fixed `Invoke-PnPSPRestMethod -Method Merge` not passing in the `If-Match: *` header and thereby causing failed requests [PR #2764](https://github.com/pnp/PnP-PowerShell/pull/2764)
+- If a certain PnP PowerShell cmdlet needs access to the SharePoint Admin Center site in order to function correctly, it will now list this in the Synopsis section of the Get-Help for the cmdlet 
+- Fixed issue where using `Connect-PnPOnline` using `-Thumbnail` would delete the private key on some devices when running `Disconnect-PnPOnline` [PR #2759](https://github.com/pnp/PnP-PowerShell/pull/2759)
+- Fixed timeouts on `Get-PnPSiteCollectionAdmin` when the site has a lot of users [PR #2769](https://github.com/pnp/PnP-PowerShell/pull/2769)
+- Updated test project structure [PR #2767](https://github.com/pnp/PnP-PowerShell/pull/2767)
+- Updated the Microsoft Authentication Library (MSAL) to 4.16.1 which resolves an [issue in the MSAL library](https://github.com/AzureAD/microsoft-authentication-library-for-dotnet/pull/1891) which caused many of the `Connect-PnPOnline` options not to work in Azure Runbooks anymore [PR #2735](https://github.com/pnp/PnP-PowerShell/pull/2735)
+- All UnifiedGroup cmdlets have been renamed to Microsoft365Group. I.e. `New-PnPUnifiedGroup` -> `New-PnPMicrosoft365Group`. An alias has been added to provide for backwards compatibility [PR #2771](https://github.com/pnp/PnP-PowerShell/pull/2771)
+
+### Contributors
+- Erwin van Hunen [erwinvanhunen]
+- Gautam Sheth [gautamdsheth]
+- Koen Zomers [koenzomers]
+- Maximilian L. [MrTantum]
+- Ellie Hussey [Professr]
+- Todd Klindt [ToddKlindt]
+- Marc D Anderson [sympmarc]
+- Jens Otto Hatlevold [jensotto]
+- Robin Meure [robinmeure]
+- Paul Bullock [pkbullock]
+
+## [3.22.2006.2]
+
+Intermediate release due to a fix in the underlying Core Library and the Connect-PnPOnline cmdlet.
+
+## [3.22.2006.1]
+
+Intermediate release due to a fix in the underlying Core Library.
+
+## [3.22.2006.0]
+
+### Added
+- Added `-ValuesOnly` option to `Get-PnPLabel` which will return more detailed information regarding the retention label set on a list or library and return the information as properties instead of written text [PR #2710](https://github.com/pnp/PnP-PowerShell/pull/2710)
+- Added `-PreferredDataLocation` option to `New-PnPSite` which allows for providing a geography in which the new SharePoint sitecollection should be created. Only applicable on multi-geo enabled tenants. [PR #2708](https://github.com/pnp/PnP-PowerShell/pull/2708)
+- Added `EnableAIPIntegration` option to `Set-PnPTenant` which allows enabling Azure Information Protection integration with SharePoint Online and OneDrive for Business on your tenant [PR #2703](https://github.com/pnp/PnP-PowerShell/pull/2703)
+- Added `Get-PnPAADUser` cmdlet which allows retrieval of users from Azure Active Directory through the Microsoft Graph API [PR #2626](https://github.com/pnp/PnP-PowerShell/pull/2626)
+- Added `Add-PnPGraphSubscription`, `Get-PnPGraphSubscription`, `Remove-PnPGraphSubscription` and `Set-PnPGraphSubscription` to work with Microsoft Graph Subscriptions [PR #2673](https://github.com/SharePoint/PnP-PowerShell/pull/2673)
+- Added `Reset-PnPUnifiedGroupExpiration` which allows the expiration date of an Office 365 Group to be extended by the number of days defined in the Azure Active Directory Group Expiration policy [PR #2655](https://github.com/pnp/PnP-PowerShell/pull/2655)
+- Added following arguments to `Set-PnPWeb` allowing them to be set: `CommentsOnSitePagesDisabled`, `DisablePowerAutomate`, `MegaMenuEnabled`, `MembersCanShare`, `NavAudienceTargetingEnabled`, `QuickLaunchEnabled` and `NoCrawl` [PR #2633](https://github.com/pnp/PnP-PowerShell/pull/2633)
+- Added `Set-PnPUserOneDriveQuota`, `Reset-PnPUserOneDriveQuotaToDefault` and `Get-PnPUserOneDriveQuota` commands to work with quotas on OneDrive for Business sites [PR #2630](https://github.com/SharePoint/PnP-PowerShell/pull/2630)
+- Added `Get-PnPTenantSyncClientRestriction` and `Set-PnPTenantSyncClientRestriction` cmdlets to allow configuring tenant wide OneDrive sync restriction settings [PR #2649](https://github.com/pnp/PnP-PowerShell/pull/2649)
+- Added `Disable-PnPSharingForNonOwnersOfSite` and `Get-PnPSharingForNonOwnersOfSite` cmdlets to control disabling the ability for only owners of the site to be allowed to share the site or its files and folders with others [PR #2641](https://github.com/pnp/PnP-PowerShell/pull/2641)
+- Added `Get-PnPIsSiteAliasAvailable` which allows checking if a certain alias is still available to create a new site collection with [PR #2698](https://github.com/pnp/PnP-PowerShell/pull/2698)
+- Added `Get-PnPFooter` and `Set-PnPFooter` to work with the footer shown on Modern Communication pages [PR #2634](https://github.com/pnp/PnP-PowerShell/pull/2634)
+- Added ability to getting and setting the title and logo shown in the footer of a Modern Communication site [PR #2715](https://github.com/pnp/PnP-PowerShell/pull/2715)
+- Added `-SensitivityLabel` option to `New-PnPSite` which allows for directly assigning a sensitivity label to a SharePoint sitecollection when creating it. Requires modern sensitivity labels and E5 licenses to be enabled on the tenant. [PR #2713](https://github.com/pnp/PnP-PowerShell/pull/2713)
+- Added `Get-PnPOffice365CurrentServiceStatus`, `Get-PnPOffice365HistoricalServiceStatus`, `Get-PnPOffice365ServiceMessage` and `Get-PnPOffice365Services` to retrieve information from the Office 365 Management API regarding the Office 365 services [PR #2684](https://github.com/pnp/PnP-PowerShell/pull/2684)
+- Added `Get-PnPAvailableLanguage` which returns a list of all supported languages on the SharePoint web [PR #2716](https://github.com/pnp/PnP-PowerShell/pull/2716)
+
+### Changed
+- Fixed uploading a file using `Add-PnPFile` using `-ContentType` throwing an exception [PR #2619](https://github.com/pnp/PnP-PowerShell/pull/2619)
+- Fixed using `Connect-PnPOnline -AppId <appid> -AppSecret <appsecret> -AADDomain` not actually authenticating to Microsoft Graph [PR #2624](https://github.com/pnp/PnP-PowerShell/pull/2624)
+- Updated `Get-PnPWorkflowInstance` to allow passing in a workflow subscription to list all running instances of a specific workflow [PR #2636](https://github.com/pnp/PnP-PowerShell/pull/2636)
+- Implementation of `Move-PnPFile` has been changed adding `-TargetServerRelativeLibrary` for SharePoint Online to allow moving files to other site collections [PR #2688](https://github.com/pnp/PnP-PowerShell/pull/2688)
+
+### Contributors
+- Alberto Suarez [holylander]
+- Rune Sperre [rsperre]
+- Nik Charlebois [NikCharlebois]
+- Eduardo Garcia-Prieto [egarcia74]
+- Koen Zomers [koenzomers]
+- James May [fowl2]
+- Marc D Anderson [sympmarc]
+- Kunj Balkrishna Sangani [kunj-sangani]
+- Gautam Sheth [gautamdsheth]
+
+## [3.21.2005.0]
+
+### Added
+
+### Changed
+- Invoke-PnPSearchQuery: Allow SelectProperties to take a comma separated string as well as an array
+
+### Contributors
+
+
 ## [3.20.2004.0]
 
 ### Added
