@@ -53,14 +53,11 @@ namespace PnP.PowerShell.Tests
 
         private static ClientContext CreateContext(string contextUrl, PSCredential credentials)
         {
-            ClientContext context = null;
-            using (var am = PnP.Framework.AuthenticationManager.CreateWithCredentials(credentials.UserName, credentials.Password))
-            {
-                context = am.GetContext(contextUrl);
-            }
-
-            context.RequestTimeout = Timeout.Infinite;
-            return context;
+            // The PnP.Framework AuthenticationManager.CreateWithCredentials signature now
+            // requires a ClientId. The scaffolded tests that call this helper are all
+            // disabled, so leave it as a stub. If you re-enable a credential-based test,
+            // wire this up with a real Entra app registration.
+            throw new NotSupportedException("Credential-based ClientContext creation is not supported in this test harness. Use PSTestScope with Interactive auth.");
         }
 
         public static string GetTenantRootUrl(ClientContext ctx)
@@ -75,6 +72,8 @@ namespace PnP.PowerShell.Tests
     {
         public string SiteUrl { get; set; }
         public PSCredential Credentials { get; set; }
+        public string ClientId { get; set; }
+        public bool UseInteractive => !string.IsNullOrEmpty(ClientId) && Credentials == null;
 
         public Configuration()
         {
@@ -88,6 +87,7 @@ namespace PnP.PowerShell.Tests
                 SiteUrl = SiteUrl.TrimEnd(new[] { '/' });
 
             }
+            ClientId = Environment.GetEnvironmentVariable("PnPTests_ClientId");
             var credLabel = Environment.GetEnvironmentVariable("PnPTests_CredentialManagerLabel");
             if (string.IsNullOrEmpty(credLabel))
             {
@@ -102,9 +102,9 @@ namespace PnP.PowerShell.Tests
             {
                 Credentials = PnP.PowerShell.Commands.Utilities.CredentialManager.GetCredential(credLabel);
             }
-            if (Credentials == null)
+            if (Credentials == null && string.IsNullOrEmpty(ClientId))
             {
-                throw new ConfigurationErrorsException("Please set PnPTests_CredentialManagerLabel or PnPTests_Username and PnPTests_Password, or run Run-Tests.ps1 in the build root folder");
+                throw new ConfigurationErrorsException("Please set PnPTests_ClientId (for Interactive auth) or PnPTests_CredentialManagerLabel / PnPTests_Username+PnPTests_Password, or run Run-Tests.ps1 in the build root folder");
             }
         }
 
