@@ -1,6 +1,7 @@
 ﻿using Microsoft.SharePoint.Client;
 using PnP.PowerShell.Commands.Base;
 using PnP.PowerShell.Commands.Base.PipeBinds;
+using System;
 using System.Management.Automation;
 
 namespace PnP.PowerShell.Commands.Admin
@@ -15,10 +16,16 @@ namespace PnP.PowerShell.Commands.Admin
         {
             if (Identity != null)
             {
-                var hubSiteProperties = Identity.GetHubSite(Tenant);
-                AdminContext.Load(hubSiteProperties);
-                AdminContext.ExecuteQueryRetry();
-                WriteObject(hubSiteProperties);
+                try
+                {
+                    var hubSiteProperties = Identity.GetHubSite(Tenant);
+                    AdminContext.Load(hubSiteProperties);
+                    AdminContext.ExecuteQueryRetry();
+                    WriteObject(hubSiteProperties);
+                }
+                catch (ServerObjectNullReferenceException)
+                {
+                }
             }
             else
             {
